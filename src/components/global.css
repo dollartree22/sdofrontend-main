@@ -1,0 +1,11 @@
+.artists {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.bar div div div {
+    background:#28a745 !important;
+}
+

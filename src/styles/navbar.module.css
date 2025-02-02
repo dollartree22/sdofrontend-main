@@ -1,0 +1,150 @@
+/* navbar.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Antonio&display=swap');
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    padding: 0px 30px;
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+  }
+  
+  .navbar.transparent {
+    background-color: rgba(0, 0, 0, 0.6);
+    background-image: none;
+    border-top: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+  }
+  
+  .left {
+    flex: 1;
+    height: 100px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .middle {
+    flex: 2;
+    height: 100px;
+  }
+  
+  .links a {
+    text-decoration: none;
+    color: white;
+    /* Replace with your desired link color */
+    /* font-family: 'Antonio', sans-serif; */
+    font-size: 20px;
+  }
+  
+  
+  .active {
+    border-bottom: 3px solid#28a745;
+  }
+  
+  .active a {
+    color:#28a745;
+  
+  }
+  
+  .ultransparent .active a {
+    color: white;
+  }
+  
+  .links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100%;
+    justify-content: space-evenly;
+  }
+  
+  .links li {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .links li:last-child {
+    margin-right: 0;
+  }
+  
+  
+  .right {
+    flex: 1;
+  }
+  
+  .navbtn {
+    float: right;  
+    background-color: #DFDFE2 !important;
+  }
+  
+  .navbtn:hover {
+    background-color: #b5b5b6;
+  }
+  
+  .toggle {
+    display: none;
+  }
+  
+  .sidebar {
+    display: none;
+  }
+  
+  @media (max-width:1000px) {
+    .middle {
+      display: none;
+    }
+  
+    .right {
+      display: none;
+    }
+  
+    .toggle {
+      display: block;
+    }
+    .links ul{
+      flex-direction: column;
+    }
+  
+  }
+  
+  .dNone {
+    display: none;
+  }
+  
+  .sidebaropen {
+    display: flex;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    min-width: 50vw;
+    padding: 15px;
+    width: max-content;
+    height: 100vh;
+    justify-content: space-around;
+    background-color: rgba(18, 21, 25, 0.98);
+    z-index: 100;
+  }
+  .cross{
+    margin-left: -80px;
+    margin-top: 12px;
+  }
+  .accnav{
+    float: right;  
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+  }
+  .accnav img{
+    border-radius: 50%;
+  }
+  .accnav .email{
+   color: rgba(255,255,255,0.7);
+  }

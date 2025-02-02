@@ -1,0 +1,26 @@
+.pointer{
+  cursor: pointer;
+}
+.appbody{
+  background-color: black;
+  min-height:94vh;
+  color: white;
+}
+.backroundrefferal{
+  background-image: url(../public/background.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.homeback{
+  background-image: url(../public/background.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.accountback{
+  background-image: url(../public/background.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

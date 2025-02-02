@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Kumbh+Sans&display=swap');
+
+/* CSS styles for the footer */
+.footer {
+    background-color: black;
+    padding: 50px;
+    font-family: 'Kumbh Sans', sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: white;
+}
+
+.footer-logo {
+    margin-bottom: 10px;
+}
+
+.footer-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.footer-social-icons {
+    margin-bottom: 10px;
+    min-width: max-content;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+}
+
+.footer-link {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: white;
+}
+.footer-link:hover{
+    color:#28a745;
+}
+.footer-button {
+    display: block;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.footer-button img {
+    padding: 10px;
+}
+
+.footer-social-icons img {
+    flex: 1;
+    filter: invert();
+}
+
+.footer-line {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3rem;
+}
+
+.footer-column .my-3:hover {
+    color: #333;
+}
+
+.footer-title {
+    color: #DFDFE2;
+    font-size: 16px;
+}
+
+.imgIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(218, 222, 228, 0.4);
+    border-radius: 50%;
+    width: 35px;
+    cursor: pointer;
+    height: 35px;
+}
