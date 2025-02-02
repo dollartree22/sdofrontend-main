@@ -169,10 +169,10 @@ const Home = () => {
           <div>
             <MiningButton currentminingtime={me.miningstartdata}/>
           </div>
-          {
+          {/* {
             me.membership?.plan ? <MyPlan handleShowModal={handleShowModal} handleCloseModal={handleCloseModal} plans={plans} /> :
               <PlanContainer update={false} plans={plans} setshowModal={setshowModal2} setid={setid} handleModalClose={handleModal2Close} />
-          }
+          } */}
           <Modal show={showModal} backdrop="static" onHide={handleModalClose}>
             <Modal.Header closeButton>
               <Modal.Title>Add Withdraw</Modal.Title>
