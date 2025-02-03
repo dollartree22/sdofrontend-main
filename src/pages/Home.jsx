@@ -27,8 +27,8 @@ const Home = () => {
     getallplans();
   }, []);
   const handleFormSubmit = () => {
-    if(formData.amount<50){
-      toast.error('Minimum Amount $50');
+    if(formData.amount<10){
+      toast.error('Minimum Amount $10');
       return
     }
     Withdraw(formData)

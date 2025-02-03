@@ -28,8 +28,8 @@ const Deposit = () => {
     }
     const handlesubmit = async () => {
         setloading(true);
-        if (amount < 0 || !amount) {
-            return toast.error('Minimum Amount is 10usdt', {
+        if (amount < 50 || !amount) {
+            return toast.error('Minimum Amount is 50usdt', {
                 position: "top-center"
             })
         };
@@ -102,7 +102,7 @@ const Deposit = () => {
                         style={{ maxWidth: "20rem" }}
                         onChange={(e) => setamount(e.target.value)}
                     />
-                    <small>Minimum Amount 10usdt</small>
+                    <small>Minimum Amount 50usdt</small>
                 </Form.Group>
                 <button disabled={loading} onClick={(handlesubmit)} className='mx-3 btn'>
                     {!loading?"Submit":"Loading..."}
