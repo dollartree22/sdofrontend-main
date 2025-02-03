@@ -119,7 +119,7 @@ const Account = () => {
                                                     <input
                                                         type="text"
                                                         className="form-control"
-                                                        placeholder="USDT(TRON)"
+                                                        placeholder="USDT(BEP20)"
                                                         value={wallet_address}
                                                         onChange={(e) => setwallet_address(e.target.value)}
                                                         required

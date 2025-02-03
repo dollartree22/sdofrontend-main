@@ -12,7 +12,7 @@ const MiningButton = ({ currentminingtime }) => {
 
         const updateTimer = () => {
             const now = new Date();
-            const diff = miningStartTime.getTime() + 1 * 60 * 1000 - now.getTime();
+            const diff = miningStartTime.getTime() + 4 * 60 * 60 * 1000 - now.getTime();
             setTimeLeft(diff > 0 ? diff : 0);
         };
 
