@@ -171,8 +171,8 @@ const Home = () => {
             <i onClick={() => { copyToClipboard(me.referralcode) }} class="fa-solid fa-copy fa-lg pointer"></i>
           </div>
           <div className='d-flex align-items-center justify-content-center my-3'>
-            <p className='mx-2' style={{ marginBottom: "0" }}>Refferal Link: {window.location.protocol + '//' + window.location.host}/login?r=${me.referralcode}</p>
-            <i onClick={() => { copyToClipboard(`${window.location.protocol + '//' + window.location.host}/login?r=${me.referralcode}`) }} class="fa-solid fa-copy fa-lg pointer"></i>
+            <p className='mx-2' style={{ marginBottom: "0" }}>Refferal Link: {window.location.protocol + '//' + window.location.host}?r={me.referralcode}</p>
+            <i onClick={() => { copyToClipboard(`${window.location.protocol + '//' + window.location.host}?r=${me.referralcode}`) }} class="fa-solid fa-copy fa-lg pointer"></i>
           </div>
           <div>
             <MiningButton currentminingtime={me.miningstartdata} />
