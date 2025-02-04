@@ -3,6 +3,7 @@ import "./login.css"
 import context from '../context/context';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 const Login = () => {
     const a = useContext(context)
     const [email, setemail] = useState("");
@@ -14,6 +15,7 @@ const Login = () => {
     const [referral, setreferral] = useState()
     const [display, setdisplay] = useState(false);
     const [otploading, setotploading] = useState(false)
+    const [searchParams] = useSearchParams(); // Get URL parameters
     const login = a.login
     const sendregotp = a.sendregotp
     const register = a.register
@@ -26,9 +28,9 @@ const Login = () => {
         register({ email: remail, password: rpassword, name, referral, otp })
     }
     useEffect(() => {
-        const referrallink = router.query.r;
-        if (referrallink) {
-            setreferral(referrallink)
+        const referralLink = searchParams.get("r"); // Extract 'r' from URL
+        if (referralLink) {
+            setreferral(referralLink)
         }
         setTimeout(() => {
             setdisplay(true)
