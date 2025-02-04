@@ -27,7 +27,7 @@ const Home = () => {
     getallplans();
   }, []);
   const handleFormSubmit = () => {
-    if(formData.amount<10){
+    if (formData.amount < 10) {
       toast.error('Minimum Amount $10');
       return
     }
@@ -102,7 +102,7 @@ const Home = () => {
     document.body.removeChild(tempInput);
   }
   return (
-    <div  style={{ minHeight: "70vh", marginTop: "100px" }} className='container homeback'>
+    <div style={{ minHeight: "70vh", marginTop: "100px" }} className='container homeback'>
       {
         loading ? <Loading /> : <>
           <h2 className='py-3'>Dashboard</h2>
@@ -112,16 +112,16 @@ const Home = () => {
                 <span className='btnText' onClick={() => window.location.href = "/deposit"}>Deposit</span>
                 <i class="fa-solid fa-plus fa-xl" style={{ color: "white" }}></i>
               </div>
-              <div className="btn" onClick={() =>{
-                if(!me.wallet_address){
-                  toast.error("Please Add your wallet address to continue!",{
-                    position:"top-center",
-                    theme:"dark"
+              <div className="btn" onClick={() => {
+                if (!me.wallet_address) {
+                  toast.error("Please Add your wallet address to continue!", {
+                    position: "top-center",
+                    theme: "dark"
                   });
                   return
                 }
                 setShowModal(true)
-                }}>
+              }}>
                 <span className='btnText'>Withdraw</span>
                 <i class="fa-solid fa-money-bill-transfer fa-xl" style={{ color: "white" }}></i>
               </div>
@@ -165,13 +165,17 @@ const Home = () => {
               </div>
             </div>
           </div>
-          
+
           <div className='d-flex align-items-center justify-content-center my-3'>
             <p className='mx-2' style={{ marginBottom: "0" }}>Refferal Code: {me.referralcode}</p>
             <i onClick={() => { copyToClipboard(me.referralcode) }} class="fa-solid fa-copy fa-lg pointer"></i>
           </div>
+          <div className='d-flex align-items-center justify-content-center my-3'>
+            <p className='mx-2' style={{ marginBottom: "0" }}>Refferal Link: {window.location.protocol + '//' + window.location.host}/login?r=${me.referralcode}</p>
+            <i onClick={() => { copyToClipboard(`${window.location.protocol + '//' + window.location.host}/login?r=${me.referralcode}`) }} class="fa-solid fa-copy fa-lg pointer"></i>
+          </div>
           <div>
-            <MiningButton currentminingtime={me.miningstartdata}/>
+            <MiningButton currentminingtime={me.miningstartdata} />
           </div>
           {/* {
             me.membership?.plan ? <MyPlan handleShowModal={handleShowModal} handleCloseModal={handleCloseModal} plans={plans} /> :

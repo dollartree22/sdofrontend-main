@@ -26,6 +26,10 @@ const Login = () => {
         register({ email: remail, password: rpassword, name, referral, otp })
     }
     useEffect(() => {
+        const referrallink = router.query.r;
+        if (referrallink) {
+            setreferral(referrallink)
+        }
         setTimeout(() => {
             setdisplay(true)
         }, 100);
