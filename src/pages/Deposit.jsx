@@ -60,8 +60,8 @@ const Deposit = () => {
                 <img width={300} style={{ background: "white" }} src="/image.jpg" alt="scan this qrcode" />
             </div>
             <div className='d-flex align-items-center justify-content-center my-3'>
-                <p className='mx-2' style={{ marginBottom: "0" }}>USDT(BEP20) 0x0350063A9dC6bF517D4c2C3763CaF3ffb0397af6</p>
-                <i onClick={() => { copyToClipboard('0x0350063A9dC6bF517D4c2C3763CaF3ffb0397af6') }} class="fa-solid fa-copy fa-lg pointer"></i>
+                <p className='mx-2' style={{ marginBottom: "0" }}>USDT(BEP20) 0x4fc67c310f5bb290db4cf13bff3f79bc7259a825</p>
+                <i onClick={() => { copyToClipboard('0x4fc67c310f5bb290db4cf13bff3f79bc7259a825') }} class="fa-solid fa-copy fa-lg pointer"></i>
             </div>
             <Form className='d-flex align-items-center justify-content-center my-4'>
                 <Form.Group controlId="formTitle">
