@@ -618,7 +618,7 @@ const State = (props) => {
     })
     const json = await response.json();
     if (json.success) {
-      toast.success("Deposit Request is sent! you will get your funds in 1-72 hrs", {
+      toast.success("Deposit Request is sent!", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
