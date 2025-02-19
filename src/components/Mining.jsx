@@ -21,6 +21,11 @@ const MiningButton = ({ currentminingtime }) => {
         return () => clearInterval(interval);
     }, [miningStartTime]);
 
+    const handleStartMining = async () => {
+        setMiningStartTime(new Date()); // Instantly update state to reflect UI change
+        await startMining(); // Call actual mining function after updating state
+    };
+
     const formatTime = (ms) => {
         const hours = Math.floor(ms / (1000 * 60 * 60));
         const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
@@ -29,15 +34,7 @@ const MiningButton = ({ currentminingtime }) => {
     };
 
     return (
-        <div
-            className="flex flex-col items-center space-y-4"
-            style={{
-                justifyContent: "center",
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column",
-            }}
-        >
+        <div className="flex flex-col items-center space-y-4">
             {timeLeft > 0 ? (
                 <div className="flex flex-col items-center">
                     <CountdownCircleTimer
@@ -45,7 +42,7 @@ const MiningButton = ({ currentminingtime }) => {
                         duration={4 * 60 * 60} // 4 hours in seconds
                         initialRemainingTime={timeLeft / 1000}
                         colors={["#4CAF50", "#F7B801", "#FF5733", "#A30000"]}
-                        colorsTime={[14400, 7200, 3600, 0]} // Color changes at these times
+                        colorsTime={[14400, 7200, 3600, 0]} // Color transitions
                         size={120}
                         strokeWidth={10}
                     >
@@ -58,13 +55,16 @@ const MiningButton = ({ currentminingtime }) => {
                     <p className="text-gray-600 text-sm mt-2">Mining in progress...</p>
                 </div>
             ) : (
-                <div className="btn" onClick={startMining}>
-                    <span className='btnText'>Start Mining</span>
-                    <i class="fa-solid fa-money-bill-transfer fa-xl" style={{ color: "white" }}></i>
-                </div>
-
+                <button
+                    className="btn flex items-center px-4 py-2 bg-green-500 text-white font-bold rounded-md hover:bg-green-600"
+                    onClick={handleStartMining}
+                    disabled={timeLeft > 0} // Prevent multiple clicks
+                >
+                    <span className="btnText mr-2">Start Mining</span>
+                    <i className="fa-solid fa-money-bill-transfer fa-xl"></i>
+                </button>
             )}
-        </div >
+        </div>
     );
 };
 
