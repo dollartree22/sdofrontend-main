@@ -28,8 +28,8 @@ const Deposit = () => {
     }
     const handlesubmit = async () => {
         setloading(true);
-        if (amount < 30 || !amount) {
-            return toast.error('Minimum Amount is 30usdt', {
+        if (amount < 50 || !amount) {
+            return toast.error('Minimum Amount is 50usdt', {
                 position: "top-center"
             })
         };
