@@ -6,10 +6,10 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 const Login = () => {
     const a = useContext(context)
-    const [email, setemail] = useState("");
+    const [phone, setphone] = useState("");
     const [password, setpassword] = useState("")
     const [name, setname] = useState("")
-    const [remail, setremail] = useState("");
+    const [rphone, setrphone] = useState("");
     const [otp, setotp] = useState("")
     const [rpassword, setrpassword] = useState("")
     const [referral, setreferral] = useState()
@@ -20,13 +20,14 @@ const Login = () => {
     const sendregotp = a.sendregotp
     const register = a.register
     const handleloginsubmit = (e) => {
-        e.preventDefault();
-        login({ email, password })
-    }
-    const handleregistersubmit = (e) => {
-        e.preventDefault();
-        register({ email: remail, password: rpassword, name, referral, otp })
-    }
+    e.preventDefault();
+    login({ phone, password })
+}
+   const handleregistersubmit = (e) => {
+    e.preventDefault();
+    register({ phone: rphone, password: rpassword, name, referral, otp })
+}
+
     useEffect(() => {
         const referralLink = searchParams.get("r"); // Extract 'r' from URL
         if (referralLink) {
@@ -36,7 +37,7 @@ const Login = () => {
             setdisplay(true)
         }, 100);
     }, [])
-    const isOtpbtnDisabled = !remail?.trim() || otploading || !remail.includes('@') || !remail.includes('.');
+   const isOtpbtnDisabled = !rphone?.trim() || otploading;
     // Otp timer 
 
     const [otpTimer, setOtpTimer] = useState(60); // Timer starts at 60 seconds
@@ -67,17 +68,16 @@ const Login = () => {
         }
     }, [otpTimer]);
 
-    const handleGetOtp = async () => {
-        setotploading(true)
-        const response = await sendregotp({ email: remail })
-        // Start the timer and disable the button
-        console.log(response)
-        setotploading(false)
-        if (response) {
-            startOtpTimer();
-            setisOtpsent(true);
-        }
-    };
+   const handleGetOtp = async () => {
+    setotploading(true)
+    const response = await sendregotp({ phone: rphone })
+    console.log(response)
+    setotploading(false)
+    if (response) {
+        startOtpTimer();
+        setisOtpsent(true);
+    }
+};
     return (
         <>
             <div className='login'>
@@ -97,8 +97,9 @@ const Login = () => {
                                                         <form onSubmit={handleloginsubmit} class="section text-center">
                                                             <h4 class="mb-4 pb-3">Log In</h4>
                                                             <div class="form-group">
-                                                                <input type="email" class="form-style" placeholder="Email" required={true} value={email} onChange={(e) => { setemail(e.target.value) }} />
-                                                                <i class="input-icon uil uil-at"></i>
+                                                               <input type="tel" class="form-style" placeholder="Phone (+923xx...)" required={true} value={phone} onChange={(e) => { setphone(e.target.value) }} />
+                                                                <i class="input-icon uil uil-phone"></i>
+
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <input type="password" class="form-style" placeholder="Password" required={true} value={password} onChange={(e) => { setpassword(e.target.value) }} />
@@ -118,12 +119,13 @@ const Login = () => {
                                                                 <input type="text" class="form-style" required={true} placeholder="Full Name" value={name} onChange={(e) => { setname(e.target.value) }} />
                                                                 <i class="input-icon uil uil-user"></i>
                                                             </div>
-                                                            <div class="form-group mt-2 d-flex">
-                                                                <input type="email" class="form-style" placeholder="Email" required={true} value={remail} onChange={(e) => { setremail(e.target.value) }} />
-                                                                <i class="input-icon uil uil-at"></i>
-                                                                <button onClick={handleGetOtp} type='button' className="btn otpBtn mx-2 " disabled={isOtpbtnDisabled || isOtpsent}>{otploading ? 'Loading...' : isOtpsent ? `Resend OTP in ${otpTimer}s` : 'Get Otp'}</button>
-                                                            </div>
-
+                                                           <div class="form-group mt-2 d-flex">
+    <input type="tel" class="form-style" placeholder="Phone (+923xx...)" required={true} value={rphone} onChange={(e) => { setrphone(e.target.value) }} />
+    <i class="input-icon uil uil-phone"></i>
+    <button onClick={handleGetOtp} type='button' className="btn otpBtn mx-2 " disabled={isOtpbtnDisabled || isOtpsent}>
+        {otploading ? 'Loading...' : isOtpsent ? `Resend OTP in ${otpTimer}s` : 'Get Otp'}
+    </button>
+</div>
                                                             <div class="form-group mt-2">
                                                                 <input type="text" class="form-style" placeholder="OTP" required={true} value={otp} onChange={(e) => { setotp(e.target.value) }} />
                                                                 <i class="input-icon uil uil-at"></i>
