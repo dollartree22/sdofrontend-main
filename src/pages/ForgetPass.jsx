@@ -9,7 +9,7 @@ const ForgetPassword = () => {
   const handleForget = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${BASE_URL}/auth/forgetpass`, { email });
+      const res = await axios.post(`${BASE_URL}/forgetpass`, { email });
       if (res.data.success) {
         toast.success("Password reset link sent to your email!");
       }

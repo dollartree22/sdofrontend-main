@@ -19,7 +19,7 @@ const Login = () => {
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(`${BASE_URL}/auth/login`, { email, password });
+            const res = await axios.post(`${BASE_URL}/login`, { email, password });
             if (res.data.success) {
                 localStorage.setItem("token", res.data.token);
                 toast.success("Login Successful");
@@ -33,7 +33,7 @@ const Login = () => {
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(`${BASE_URL}/auth/register`, {
+            const res = await axios.post(`${BASE_URL}/register`, {
                 name,
                 email: regEmail,
                 password: regPassword,

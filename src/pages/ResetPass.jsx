@@ -17,7 +17,7 @@ const Resetpass = () => {
       return;
     }
     try {
-      const res = await axios.post(`${BASE_URL}/auth/resetpass`, { token, password });
+      const res = await axios.post(`${BASE_URL}/resetpassword`, { token, password });
       if (res.data.success) {
         toast.success("Password reset successfully!");
       }
