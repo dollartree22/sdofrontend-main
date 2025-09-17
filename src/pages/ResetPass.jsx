@@ -1,55 +1,55 @@
-import React, { useContext, useState } from 'react'
-import context from '../context/context'
+import React, { useState } from 'react';
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
 
 const Resetpass = () => {
-    const a = useContext(context);
-    const resetpass = a.resetpassword
-    const [password, setpassword] = useState("")
-    const [cpassword, setcpassword] = useState("")
-    const handleloginsubmit = (e) => {
-        e.preventDefault()
-        if (cpassword !== password) {
-            alert("Please make sure both passwords Match")
-        } else {
-            resetpass({ password })
-        }
-    }
-    return (
-        <div className='login'>
-            <div class="section">
-                <div class="container">
-                    <div class="row full-height justify-content-center">
-                        <div class="col-12 text-center align-self-center py-5">
-                            <div class="section pb-5 pt-5 pt-sm-2 text-center">
-                                <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
-                                <label for="reg-log" className='d-none'></label>
-                                <div class="card-3d-wrap mx-auto">
-                                    <div class="card-3d-wrapper">
-                                        <div class="card-front">
-                                            <div class="center-wrap">
-                                                <form onSubmit={handleloginsubmit} class="section text-center">
-                                                    <h4 class="mb-4 pb-3">New password</h4>
-                                                    <div class="form-group mt-2">
-                                                        <input type="password" class="form-style" placeholder="Password" required={true} value={password} onChange={(e) => { setpassword(e.target.value) }} />
-                                                        <i class="input-icon uil uil-lock-alt"></i>
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <input type="password" class="form-style" placeholder="Confirm Password" required={true} value={cpassword} onChange={(e) => { setcpassword(e.target.value) }} />
-                                                        <i class="input-icon uil uil-lock-alt"></i>
-                                                    </div>
-                                                    <button href="#" type='submit' class="btn mt-4">Submit</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
+  const BASE_URL = process.env.REACT_APP_BACKEND;
+  const [password, setPassword] = useState("");
+  const [cpassword, setCpassword] = useState("");
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token"); // from reset link
 
-export default Resetpass
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (password !== cpassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/resetpass`, { token, password });
+      if (res.data.success) {
+        toast.success("Password reset successfully!");
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to reset password");
+    }
+  };
+
+  return (
+    <div className='login'>
+      <div className="section">
+        <div className="container">
+          <div className="row full-height justify-content-center">
+            <div className="col-12 text-center align-self-center py-5">
+              <div className="section pb-5 pt-5 pt-sm-2 text-center">
+                <h4 className="mb-4 pb-3">New Password</h4>
+                <form onSubmit={handleSubmit} className="section text-center">
+                  <div className="form-group mt-2">
+                    <input type="password" className="form-style" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                  </div>
+                  <div className="form-group mt-2">
+                    <input type="password" className="form-style" placeholder="Confirm Password" required value={cpassword} onChange={(e) => setCpassword(e.target.value)} />
+                  </div>
+                  <button type='submit' className="btn mt-4">Submit</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Resetpass;

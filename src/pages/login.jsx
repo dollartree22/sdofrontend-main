@@ -1,163 +1,131 @@
-import React, { useContext, useState } from 'react'
-import "./login.css"
-import context from '../context/context';
-import { toast } from 'react-toastify';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import "./login.css";
+import axios from "axios";
+import { toast } from "react-toastify";
 import { useSearchParams } from 'react-router-dom';
+
 const Login = () => {
-    const a = useContext(context)
-    const [phone, setphone] = useState("");
-    const [password, setpassword] = useState("")
-    const [name, setname] = useState("")
-    const [rphone, setrphone] = useState("");
-    const [otp, setotp] = useState("")
-    const [rpassword, setrpassword] = useState("")
-    const [referral, setreferral] = useState()
-    const [display, setdisplay] = useState(false);
-    const [otploading, setotploading] = useState(false)
-    const [searchParams] = useSearchParams(); // Get URL parameters
-    const login = a.login
-    const sendregotp = a.sendregotp
-    const register = a.register
-    const handleloginsubmit = (e) => {
-    e.preventDefault();
-    login({ phone, password })
-}
-   const handleregistersubmit = (e) => {
-    e.preventDefault();
-    register({ phone: rphone, password: rpassword, name, referral, otp })
-}
+    const BASE_URL = process.env.REACT_APP_BACKEND;
 
-    useEffect(() => {
-        const referralLink = searchParams.get("r"); // Extract 'r' from URL
-        if (referralLink) {
-            setreferral(referralLink)
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
+    const [regEmail, setRegEmail] = useState("");
+    const [regPassword, setRegPassword] = useState("");
+    const [referral, setReferral] = useState("");
+    const [display, setDisplay] = useState(false);
+
+    // 🔹 Login API
+    const handleLoginSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.post(`${BASE_URL}/auth/login`, { email, password });
+            if (res.data.success) {
+                localStorage.setItem("token", res.data.token);
+                toast.success("Login Successful");
+            }
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Login Failed");
         }
-        setTimeout(() => {
-            setdisplay(true)
-        }, 100);
-    }, [])
-   const isOtpbtnDisabled = !rphone?.trim() || otploading;
-    // Otp timer 
-
-    const [otpTimer, setOtpTimer] = useState(60); // Timer starts at 60 seconds
-    const [isOtpsent, setisOtpsent] = useState(false)
-
-    // Function to start the timer and decrement the countdown
-    const startOtpTimer = () => {
-        setOtpTimer(60); // Reset the timer to 60 seconds
     };
-    useEffect(() => {
-        // If the timer is greater than 0 and the button is disabled, decrement the timer every second
-        let interval;
-        if (otpTimer > 0 && isOtpsent) {
-            interval = setInterval(() => {
-                setOtpTimer((prevTimer) => prevTimer - 1);
-            }, 1000);
-        } else {
-            clearInterval(interval);
-        }
-        return () => {
-            clearInterval(interval);
-        };
-    }, [otpTimer, isOtpsent]);
-    useEffect(() => {
-        // When the timer reaches 0, enable the "Get Otp" button again
-        if (otpTimer === 0) {
-            setisOtpsent(false);
-        }
-    }, [otpTimer]);
 
-   const handleGetOtp = async () => {
-    setotploading(true)
-    const response = await sendregotp({ phone: rphone })
-    console.log(response)
-    setotploading(false)
-    if (response) {
-        startOtpTimer();
-        setisOtpsent(true);
-    }
-};
+    // 🔹 Register API
+    const handleRegisterSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.post(`${BASE_URL}/auth/register`, {
+                name,
+                email: regEmail,
+                password: regPassword,
+                referral
+            });
+            if (res.data.success) {
+                localStorage.setItem("token", res.data.token);
+                toast.success("Registration Successful");
+            }
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Registration Failed");
+        }
+    };
+
+    // 🔹 Referral Code from URL
+    const [searchParams] = useSearchParams();
+    useEffect(() => {
+        const referralLink = searchParams.get("r");
+        if (referralLink) {
+            setReferral(referralLink);
+        }
+        setTimeout(() => setDisplay(true), 100);
+    }, []);
+
     return (
-        <>
-            <div className='login'>
-                {display ?
-                    <div class="section">
-                        <div class="container">
-                            <div class="row full-height justify-content-center">
-                                <div class="col-12 text-center align-self-center py-5">
-                                    <div class="section pb-5 pt-5 pt-sm-2 text-center">
-                                        <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
-                                        <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
-                                        <label for="reg-log"></label>
-                                        <div class="card-3d-wrap mx-auto">
-                                            <div class="card-3d-wrapper">
-                                                <div class="card-front">
-                                                    <div class="center-wrap">
-                                                        <form onSubmit={handleloginsubmit} class="section text-center">
-                                                            <h4 class="mb-4 pb-3">Log In</h4>
-                                                            <div class="form-group">
-                                                               <input type="tel" class="form-style" placeholder="Phone (+923xx...)" required={true} value={phone} onChange={(e) => { setphone(e.target.value) }} />
-                                                                <i class="input-icon uil uil-phone"></i>
-
-                                                            </div>
-                                                            <div class="form-group mt-2">
-                                                                <input type="password" class="form-style" placeholder="Password" required={true} value={password} onChange={(e) => { setpassword(e.target.value) }} />
-                                                                <i class="input-icon uil uil-lock-alt"></i>
-                                                            </div>
-                                                            <button href="#" type='submit' class="btn mt-4">Login</button>
-                                                            <p class="m-0 text-center"><a href="/forgetpass" class="link">Forgot your password?</a></p>
-
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                                <div class="card-back">
-                                                    <div class="center-wrap">
-                                                        <form onSubmit={handleregistersubmit} class="section text-center">
-                                                            <h4 class="mb-3 pb-3">Sign Up</h4>
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-style" required={true} placeholder="Full Name" value={name} onChange={(e) => { setname(e.target.value) }} />
-                                                                <i class="input-icon uil uil-user"></i>
-                                                            </div>
-                                                           <div class="form-group mt-2 d-flex">
-    <input type="tel" class="form-style" placeholder="Phone (+923xx...)" required={true} value={rphone} onChange={(e) => { setrphone(e.target.value) }} />
-    <i class="input-icon uil uil-phone"></i>
-    <button onClick={handleGetOtp} type='button' className="btn otpBtn mx-2 " disabled={isOtpbtnDisabled || isOtpsent}>
-        {otploading ? 'Loading...' : isOtpsent ? `Resend OTP in ${otpTimer}s` : 'Get Otp'}
-    </button>
-</div>
-                                                            <div class="form-group mt-2">
-                                                                <input type="text" class="form-style" placeholder="OTP" required={true} value={otp} onChange={(e) => { setotp(e.target.value) }} />
-                                                                <i class="input-icon uil uil-at"></i>
-
-                                                            </div>
-                                                            <div class="form-group mt-2">
-                                                                <input type="password" required={true} class="form-style" placeholder="Password" value={rpassword} onChange={(e) => { setrpassword(e.target.value) }} />
-                                                                <i class="input-icon uil uil-lock-alt"></i>
-                                                            </div>
-                                                            <div class="form-group mt-2">
-                                                                <input type="text" required={false} class="form-style" placeholder="Refferal Code(optional)" value={referral} onChange={(e) => { setreferral(e.target.value) }} />
-                                                                <i style={{ fontWeight: "900", fontStyle: "normal" }} className="input-icon fa-users-between-lines font-family-awesome"></i>
-                                                            </div>
-                                                            <button type='submit' href="#" class="btn mt-4">Register</button>
-                                                        </form>
-                                                    </div>
+        <div className='login'>
+            {display && (
+                <div className="section">
+                    <div className="container">
+                        <div className="row full-height justify-content-center">
+                            <div className="col-12 text-center align-self-center py-5">
+                                <div className="section pb-5 pt-5 pt-sm-2 text-center">
+                                    <h6 className="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+                                    <input className="checkbox" type="checkbox" id="reg-log" name="reg-log" />
+                                    <label htmlFor="reg-log"></label>
+                                    <div className="card-3d-wrap mx-auto">
+                                        <div className="card-3d-wrapper">
+                                            {/* Login */}
+                                            <div className="card-front">
+                                                <div className="center-wrap">
+                                                    <form onSubmit={handleLoginSubmit} className="section text-center">
+                                                        <h4 className="mb-4 pb-3">Log In</h4>
+                                                        <div className="form-group">
+                                                            <input type="email" className="form-style" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                                                            <i className="input-icon uil uil-at"></i>
+                                                        </div>
+                                                        <div className="form-group mt-2">
+                                                            <input type="password" className="form-style" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                                                            <i className="input-icon uil uil-lock-alt"></i>
+                                                        </div>
+                                                        <button type='submit' className="btn mt-4">Login</button>
+                                                        <p className="m-0 text-center"><a href="/forgetpass" className="link">Forgot your password?</a></p>
+                                                    </form>
                                                 </div>
                                             </div>
+
+                                            {/* Register */}
+                                            <div className="card-back">
+                                                <div className="center-wrap">
+                                                    <form onSubmit={handleRegisterSubmit} className="section text-center">
+                                                        <h4 className="mb-3 pb-3">Sign Up</h4>
+                                                        <div className="form-group">
+                                                            <input type="text" className="form-style" placeholder="Full Name" required value={name} onChange={(e) => setName(e.target.value)} />
+                                                            <i className="input-icon uil uil-user"></i>
+                                                        </div>
+                                                        <div className="form-group mt-2">
+                                                            <input type="email" className="form-style" placeholder="Email" required value={regEmail} onChange={(e) => setRegEmail(e.target.value)} />
+                                                            <i className="input-icon uil uil-at"></i>
+                                                        </div>
+                                                        <div className="form-group mt-2">
+                                                            <input type="password" className="form-style" placeholder="Password" required value={regPassword} onChange={(e) => setRegPassword(e.target.value)} />
+                                                            <i className="input-icon uil uil-lock-alt"></i>
+                                                        </div>
+                                                        <div className="form-group mt-2">
+                                                            <input type="text" className="form-style" placeholder="Referral Code (optional)" value={referral} onChange={(e) => setReferral(e.target.value)} />
+                                                            <i style={{ fontWeight: "900", fontStyle: "normal" }} className="input-icon fa-users-between-lines font-family-awesome"></i>
+                                                        </div>
+                                                        <button type='submit' className="btn mt-4">Register</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    : ""}
-            </div>
-        </>
-
+                </div>
+            )}
+        </div>
     )
 }
 
-export default Login
-
-
-
+export default Login;
