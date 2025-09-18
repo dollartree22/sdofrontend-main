@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "./login.css";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const BASE_URL = process.env.REACT_APP_BACKEND;
@@ -15,6 +15,9 @@ const Login = () => {
     const [referral, setReferral] = useState("");
     const [display, setDisplay] = useState(false);
 
+    const navigate = useNavigate(); // ✅ Added useNavigate hook
+    const [searchParams] = useSearchParams();
+
     // 🔹 Login API
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
@@ -23,6 +26,7 @@ const Login = () => {
             if (res.data.success) {
                 localStorage.setItem("token", res.data.token);
                 toast.success("Login Successful");
+                navigate("/"); // Redirect to home
             }
         } catch (err) {
             toast.error(err.response?.data?.message || "Login Failed");
@@ -33,7 +37,7 @@ const Login = () => {
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         try {
-           const res = await axios.post(`${BASE_URL}/api/user/register`, {
+            const res = await axios.post(`${BASE_URL}/api/user/register`, {
                 name,
                 email: regEmail,
                 password: regPassword,
@@ -42,6 +46,7 @@ const Login = () => {
             if (res.data.success) {
                 localStorage.setItem("token", res.data.token);
                 toast.success("Registration Successful");
+                navigate("/"); // Redirect after register
             }
         } catch (err) {
             toast.error(err.response?.data?.message || "Registration Failed");
@@ -49,14 +54,13 @@ const Login = () => {
     };
 
     // 🔹 Referral Code from URL
-    const [searchParams] = useSearchParams();
     useEffect(() => {
         const referralLink = searchParams.get("r");
         if (referralLink) {
             setReferral(referralLink);
         }
         setTimeout(() => setDisplay(true), 100);
-    }, []);
+    }, [searchParams]);
 
     return (
         <div className='login'>
@@ -71,6 +75,7 @@ const Login = () => {
                                     <label htmlFor="reg-log"></label>
                                     <div className="card-3d-wrap mx-auto">
                                         <div className="card-3d-wrapper">
+
                                             {/* Login */}
                                             <div className="card-front">
                                                 <div className="center-wrap">
@@ -125,7 +130,7 @@ const Login = () => {
                 </div>
             )}
         </div>
-    )
+    );
 }
 
 export default Login;
