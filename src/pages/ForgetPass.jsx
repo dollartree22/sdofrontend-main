@@ -1,21 +1,33 @@
 import React, { useState } from 'react';
-import axios from "axios";
 import { toast } from "react-toastify";
 
 const ForgetPassword = () => {
   const BASE_URL = process.env.REACT_APP_BACKEND;
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleForget = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const res = await axios.post(`${BASE_URL}/forgetpass`, { email });
-      if (res.data.success) {
+      const response = await fetch(`${BASE_URL}/api/user/forgetpassword`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      });
+      
+      const json = await response.json();
+      if (json.success) {
         toast.success("Password reset link sent to your email!");
+      } else {
+        toast.error(json.message || "Something went wrong");
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Something went wrong");
+      toast.error("Network error. Please try again.");
     }
+    setLoading(false);
   };
 
   return (
@@ -38,7 +50,9 @@ const ForgetPassword = () => {
                     />
                     <i className="input-icon uil uil-at"></i>
                   </div>
-                  <button type="submit" className="btn mt-4">Send Reset Link</button>
+                  <button type="submit" className="btn mt-4" disabled={loading}>
+                    {loading ? "Sending..." : "Send Reset Link"}
+                  </button>
                 </form>
               </div>
             </div>

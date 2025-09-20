@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import axios from "axios";
 import { toast } from "react-toastify";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Resetpass = () => {
   const BASE_URL = process.env.REACT_APP_BACKEND;
   const [password, setPassword] = useState("");
   const [cpassword, setCpassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token"); // from reset link
+  const token = searchParams.get("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,14 +17,28 @@ const Resetpass = () => {
       toast.error("Passwords do not match!");
       return;
     }
+    
+    setLoading(true);
     try {
-      const res = await axios.post(`${BASE_URL}/resetpassword`, { token, password });
-      if (res.data.success) {
+      const response = await fetch(`${BASE_URL}/api/user/resetpassword`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token, password })
+      });
+      
+      const json = await response.json();
+      if (json.success) {
         toast.success("Password reset successfully!");
+        navigate("/login");
+      } else {
+        toast.error(json.message || "Failed to reset password");
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to reset password");
+      toast.error("Network error. Please try again.");
     }
+    setLoading(false);
   };
 
   return (
@@ -41,7 +56,9 @@ const Resetpass = () => {
                   <div className="form-group mt-2">
                     <input type="password" className="form-style" placeholder="Confirm Password" required value={cpassword} onChange={(e) => setCpassword(e.target.value)} />
                   </div>
-                  <button type='submit' className="btn mt-4">Submit</button>
+                  <button type='submit' className="btn mt-4" disabled={loading}>
+                    {loading ? "Processing..." : "Submit"}
+                  </button>
                 </form>
               </div>
             </div>

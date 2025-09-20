@@ -15,25 +15,36 @@ const State = (props) => {
   const [refferals, setrefferals] = useState([])
   const [deposits, setdeposits] = useState([])
 
-  const login = async (data) => {
+ const login = async (data) => {
     setloading(true)
-    const response = await fetch(`${host}/api/user/login`, {
-      method: "POST",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-    const json = await response.json();
-    if (json.success) {
-      localStorage.setItem('login-Dollar-tree-token', json.token)
-      Swal.fire("Welcome to Dollar Tree Investments!","At Dollar Tree, we’re all about helping you grow your money and reach your financial goals. We offer smart, easy-to-understand investment opportunities that are designed to fit your needs. Whether you’re just getting started or have experience in investing, we’re here to guide you every step of the way. Our team is dedicated to finding the right opportunities for you, with a focus on steady growth and smart choices. Let’s build your future together!",'info').then(()=>{
-        window.location.reload()
-      });
-    } else {
-      toast.error(json.message, {
+    try {
+      const response = await fetch(`${host}/api/user/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      const json = await response.json();
+      if (json.success) {
+        localStorage.setItem('login-Dollar-tree-token', json.token)
+        Swal.fire("Welcome to Dollar Tree Investments!", "At Dollar Tree, we're all about helping you grow your money and reach your financial goals. We offer smart, easy-to-understand investment opportunities that are designed to fit your needs. Whether you're just getting started or have experience in investing, we're here to guide you every step of the way. Our team is dedicated to finding the right opportunities for you, with a focus on steady growth and smart choices. Let's build your future together!", 'info').then(() => {
+          window.location.reload()
+        });
+      } else {
+        toast.error(json.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    } catch (error) {
+      toast.error("Network error. Please try again.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -43,29 +54,38 @@ const State = (props) => {
         progress: undefined,
         theme: "dark",
       });
-
     }
     setloading(false)
   }
-
   const register = async (data) => {
     setloading(true)
-    const response = await fetch(`${host}/api/user/register`, {
-      method: "POST",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Content-Type": "application/json",
-        "Authentication": localStorage.getItem('otp-login-token')
-      },
-      body: JSON.stringify(data)
-    })
-    const json = await response.json();
-    if (json.success) {
-      localStorage.setItem('login-Dollar-tree-token', json.token)
-      window.location.reload()
-    } else {
-      toast.error(json.message, {
+    try {
+      const response = await fetch(`${host}/api/user/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": localStorage.getItem('otp-login-token')
+        },
+        body: JSON.stringify(data)
+      })
+      const json = await response.json();
+      if (json.success) {
+        localStorage.setItem('login-Dollar-tree-token', json.token)
+        window.location.reload()
+      } else {
+        toast.error(json.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    } catch (error) {
+      toast.error("Network error. Please try again.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -75,40 +95,48 @@ const State = (props) => {
         progress: undefined,
         theme: "dark",
       });
-
     }
     setloading(false)
   }
-
-
   const resetpassword = async (data) => {
     setloading(true)
-    const response = await fetch(`${host}/api/user/resetpassword`, {
-      method: "POST",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Content-Type": "application/json",
-        "Authentication": localStorage.getItem("otp-login-token")
-      },
-      body: JSON.stringify(data)
-    })
-    const json = await response.json();
-    setloading(false)
-    if (json.success) {
-      toast.success(json.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      return true
-    } else {
-      toast.error(json.message, {
+    try {
+      const response = await fetch(`${host}/api/user/resetpassword`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": localStorage.getItem("otp-login-token")
+        },
+        body: JSON.stringify(data)
+      })
+      const json = await response.json();
+      if (json.success) {
+        toast.success(json.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        return true
+      } else {
+        toast.error(json.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        return false
+      }
+    } catch (error) {
+      toast.error("Network error. Please try again.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -120,35 +148,47 @@ const State = (props) => {
       });
       return false
     }
+    setloading(false)
   }
   const updatepassword = async (data) => {
     setloading(true)
-    const response = await fetch(`${host}/api/user/updatepassword`, {
-      method: "POST",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Content-Type": "application/json",
-        "Authentication": localStorage.getItem("login-Dollar-tree-token")
-      },
-      body: JSON.stringify(data)
-    })
-    const json = await response.json();
-    setloading(false)
-    if (json.success) {
-      toast.success(json.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      return true
-    } else {
-      toast.error(json.message, {
+    try {
+      const response = await fetch(`${host}/api/user/updatepassword`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": localStorage.getItem("login-Dollar-tree-token")
+        },
+        body: JSON.stringify(data)
+      })
+      const json = await response.json();
+      if (json.success) {
+        toast.success(json.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        return true
+      } else {
+        toast.error(json.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        return false
+      }
+    } catch (error) {
+      toast.error("Network error. Please try again.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -160,35 +200,47 @@ const State = (props) => {
       });
       return false
     }
+    setloading(false)
   }
   const updateme = async (data) => {
     setloading(true)
-    const response = await fetch(`${host}/api/user/upateme`, {
-      method: "POST",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Content-Type": "application/json",
-        "Authentication": localStorage.getItem("login-Dollar-tree-token")
-      },
-      body: JSON.stringify(data)
-    })
-    const json = await response.json();
-    setloading(false)
-    if (json.success) {
-      toast.success("Updated Successfully", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      return true
-    } else {
-      toast.error(json.message, {
+    try {
+      const response = await fetch(`${host}/api/user/updateme`, { // Fixed endpoint from upateme to updateme
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": localStorage.getItem("login-Dollar-tree-token")
+        },
+        body: JSON.stringify(data)
+      })
+      const json = await response.json();
+      if (json.success) {
+        toast.success("Updated Successfully", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        return true
+      } else {
+        toast.error(json.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        return false
+      }
+    } catch (error) {
+      toast.error("Network error. Please try again.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -200,24 +252,36 @@ const State = (props) => {
       });
       return false
     }
+    setloading(false)
   }
   const getme = async () => {
     setdataloading(true)
-    const response = await fetch(`${host}/api/user/me`, {
-      method: "get",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Content-Type": "application/json",
-        "Authentication": localStorage.getItem("login-Dollar-tree-token")
+    try {
+      const response = await fetch(`${host}/api/user/me`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": localStorage.getItem("login-Dollar-tree-token")
+        }
+      })
+      const json = await response.json();
+      if (json.success) {
+        setme(json.user)
+        setanalytics(json.data)
+      } else {
+        toast.error(json.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       }
-    })
-    const json = await response.json();
-    if (json.success) {
-      setme(json.user)
-      setanalytics(json.data)
-    } else {
-      toast.error(json.message, {
+    } catch (error) {
+      toast.error("Network error. Please try again.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -294,32 +358,167 @@ const State = (props) => {
   }
 
 
-  const sendregotp = async (data) => {
-    const response = await fetch(`${host}/api/user/sendregotp`, {
-      method: "post",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data)
-    })
-    const json = await response.json();
-    if (json.success) {
-      localStorage.setItem("otp-login-token", json.token)
-      toast.success("OTP SENT!", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      return true
-    } else {
-      toast.error(json.message, {
+  // const sendregotp = async (data) => {
+  //   const response = await fetch(`${host}/api/user/sendregotp`, {
+  //     method: "post",
+  //     headers: {
+  //       "Access-Control-Allow-Origin": "*",
+  //       "Access-Control-Allow-Methods": "GET",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data)
+  //   })
+  //   const json = await response.json();
+  //   if (json.success) {
+  //     localStorage.setItem("otp-login-token", json.token)
+  //     toast.success("OTP SENT!", {
+  //       position: "top-center",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "light",
+  //     });
+  //     return true
+  //   } else {
+  //     toast.error(json.message, {
+  //       position: "top-center",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "dark",
+  //     });
+  //     return false
+  //   }
+  // }
+  // const sendotp = async (data) => {
+  //   const response = await fetch(`${host}/api/user/sendotp`, {
+  //     method: "post",
+  //     headers: {
+  //       "Access-Control-Allow-Origin": "*",
+  //       "Access-Control-Allow-Methods": "GET",
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify(data)
+  //   })
+  //   const json = await response.json();
+  //   if (json.success) {
+  //     localStorage.setItem("otp-login-token", json.token)
+  //     toast.success("OTP SENT!", {
+  //       position: "top-center",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "light",
+  //     });
+  //     return true
+  //   } else {
+  //     toast.error(json.message, {
+  //       position: "top-center",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "dark",
+  //     });
+  //     return false
+  //   }
+  // }
+  // const verifyotp = async (data) => {
+  //   const response = await fetch(`${host}/api/user/verifyotp`, {
+  //     method: "post",
+  //     headers: {
+  //       "Access-Control-Allow-Origin": "*",
+  //       "Access-Control-Allow-Methods": "GET",
+  //       "Content-Type": "application/json",
+  //       "Authentication": localStorage.getItem('otp-login-token')
+  //     },
+  //     body: JSON.stringify(data)
+  //   })
+  //   const json = await response.json();
+  //   if (json.success) {
+  //     localStorage.setItem("otp-login-token", json.token)
+  //     window.location = "/resetpass"
+  //   } else {
+  //     toast.error(json.message, {
+  //       position: "top-center",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "dark",
+  //     });
+  //   }
+  // }
+
+
+  // const getallplans = async (data) => {
+  //   const response = await fetch(`${host}/api/plan/`, {
+  //     method: "get",
+  //     headers: {
+  //       "Access-Control-Allow-Origin": "*",
+  //       "Access-Control-Allow-Methods": "GET",
+  //       "Content-Type": "application/json",
+  //       "Authentication": localStorage.getItem('login-Dollar-tree-token')
+  //     },
+  //     body: JSON.stringify(data)
+  //   })
+  //   const json = await response.json();
+  //   if (json.success) {
+  //     setplans(json.data)
+  //   } else {
+  //     toast.error(json.message, {
+  //       position: "top-center",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "dark",
+  //     });
+  //   }
+  // }
+
+   const getallplans = async () => { // Removed data parameter for GET request
+    try {
+      const response = await fetch(`${host}/api/plan/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": localStorage.getItem('login-Dollar-tree-token')
+        }
+        // Removed body from GET request
+      })
+      const json = await response.json();
+      if (json.success) {
+        setplans(json.data)
+      } else {
+        toast.error(json.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    } catch (error) {
+      toast.error("Network error. Please try again.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -329,102 +528,10 @@ const State = (props) => {
         progress: undefined,
         theme: "dark",
       });
-      return false
     }
   }
-  const sendotp = async (data) => {
-    const response = await fetch(`${host}/api/user/sendotp`, {
-      method: "post",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-    const json = await response.json();
-    if (json.success) {
-      localStorage.setItem("otp-login-token", json.token)
-      toast.success("OTP SENT!", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      return true
-    } else {
-      toast.error(json.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      return false
-    }
-  }
-  const verifyotp = async (data) => {
-    const response = await fetch(`${host}/api/user/verifyotp`, {
-      method: "post",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Content-Type": "application/json",
-        "Authentication": localStorage.getItem('otp-login-token')
-      },
-      body: JSON.stringify(data)
-    })
-    const json = await response.json();
-    if (json.success) {
-      localStorage.setItem("otp-login-token", json.token)
-      window.location = "/resetpass"
-    } else {
-      toast.error(json.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  }
-  const getallplans = async (data) => {
-    const response = await fetch(`${host}/api/plan/`, {
-      method: "get",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Content-Type": "application/json",
-        "Authentication": localStorage.getItem('login-Dollar-tree-token')
-      },
-      body: JSON.stringify(data)
-    })
-    const json = await response.json();
-    if (json.success) {
-      setplans(json.data)
-    } else {
-      toast.error(json.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  }
+
+
   const joinplan = async (data) => {
     setloading(true)
     const response = await fetch(`${host}/api/plan/`, {
@@ -458,6 +565,7 @@ const State = (props) => {
       return false
     }
   }
+
   const updateplan = async (data) => {
     setloading(true)
     const response = await fetch(`${host}/api/plan/`, {
@@ -708,13 +816,12 @@ const State = (props) => {
       updatepassword, getreferrals, refferals, startMining,
       updateplan, getmywithdraws, withdraws, deposits, rewards, getmydeposits, getmyrewards,
       register, getallplans, plans, deposit, Withdraw, joinplan, analytics,
-      uploadimg, delimg, updateme, login, verifyotp, sendotp, sendregotp,
+      uploadimg, delimg, updateme, login,
       loading, getme, me, resetpassword, dataloading
     }}>
       {props.children}
     </context.Provider>
   )
-
-}
+} 
 
 export default State
