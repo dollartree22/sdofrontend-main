@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
 import { toast } from "react-toastify";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Resetpass = () => {
+const ResetPass = ({ email, token }) => {
   const BASE_URL = process.env.REACT_APP_BACKEND;
-  const [password, setPassword] = useState("");
-  const [cpassword, setCpassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== cpassword) {
+    
+    if (newPassword !== confirmPassword) {
       toast.error("Passwords do not match!");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
       return;
     }
     
@@ -25,7 +29,10 @@ const Resetpass = () => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ token, password })
+        body: JSON.stringify({ 
+          token: token, 
+          newpassword: newPassword 
+        })
       });
       
       const json = await response.json();
@@ -48,18 +55,38 @@ const Resetpass = () => {
           <div className="row full-height justify-content-center">
             <div className="col-12 text-center align-self-center py-5">
               <div className="section pb-5 pt-5 pt-sm-2 text-center">
-                <h4 className="mb-4 pb-3">New Password</h4>
+                <h4 className="mb-4 pb-3">Set New Password for {email}</h4>
                 <form onSubmit={handleSubmit} className="section text-center">
                   <div className="form-group mt-2">
-                    <input type="password" className="form-style" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input 
+                      type="password" 
+                      className="form-style" 
+                      placeholder="New Password" 
+                      required 
+                      value={newPassword} 
+                      onChange={(e) => setNewPassword(e.target.value)} 
+                    />
+                    <i className="input-icon uil uil-lock-alt"></i>
                   </div>
                   <div className="form-group mt-2">
-                    <input type="password" className="form-style" placeholder="Confirm Password" required value={cpassword} onChange={(e) => setCpassword(e.target.value)} />
+                    <input 
+                      type="password" 
+                      className="form-style" 
+                      placeholder="Confirm New Password" 
+                      required 
+                      value={confirmPassword} 
+                      onChange={(e) => setConfirmPassword(e.target.value)} 
+                    />
+                    <i className="input-icon uil uil-lock-alt"></i>
                   </div>
                   <button type='submit' className="btn mt-4" disabled={loading}>
-                    {loading ? "Processing..." : "Submit"}
+                    {loading ? "Resetting..." : "Reset Password"}
                   </button>
                 </form>
+                
+                <p className="mt-3">
+                  <a href="/login" className="link">Back to Login</a>
+                </p>
               </div>
             </div>
           </div>
@@ -69,4 +96,4 @@ const Resetpass = () => {
   );
 };
 
-export default Resetpass;
+export default ResetPass;

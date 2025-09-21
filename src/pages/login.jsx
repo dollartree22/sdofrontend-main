@@ -20,31 +20,40 @@ const Login = () => {
 
   // Login API
   const handleLoginSubmit = async (e) => {
-    e.preventDefault();
-    setLoginLoading(true);
-    try {
-      const response = await fetch(`${BASE_URL}/api/user/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
-      });
+  e.preventDefault(); 
+   setLoginLoading(true);
+  try {
+    console.log("Trying URL:", `${BASE_URL}/api/user/login`); // Debugging
+    const response = await fetch(`${BASE_URL}/api/user/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email: email.trim(), password: password.trim() })
+    });
+    
+    console.log("Response status:", response.status); // Debugging
+    const json = await response.json();
+    console.log("Response JSON:", json); // Debugging
+    
+    if (json.success) {
+      console.log("Login successful, storing token", json.token); // Debugging
+      localStorage.setItem("login-Dollar-tree-token", json.token);
+      toast.success("Login Successful");
       
-      const json = await response.json();
-      if (json.success) {
-        localStorage.setItem("login-Dollar-tree-token", json.token);
-        toast.success("Login Successful");
-        navigate("/");
-        window.location.reload();
-      } else {
-        toast.error(json.message || "Login Failed");
-      }
-    } catch (error) {
-      toast.error("Network error. Please try again.");
+      const storedToken = localStorage.getItem("login-Dollar-tree-token");
+      console.log("Stored token:", storedToken); // Debugging
+       
+      window.location.href = "/";
+    } else {
+      toast.error(json.message || "Login Failed");
     }
-    setLoginLoading(false);
-  };
+  } catch (error) {
+    console.error("Login error:", error); // Debugging
+    toast.error("Network error. Please try again.");
+  }
+  setLoginLoading(false);
+};  
 
   // Register API
   const handleRegisterSubmit = async (e) => {
@@ -57,10 +66,10 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
-          email: regEmail,
-          password: regPassword,
-          referral
+       name: name.trim(),
+       email: regEmail.trim(),
+        password: regPassword.trim(),
+          referral: referral.trim()
         })
       });
       

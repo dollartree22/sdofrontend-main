@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar.jsx';
 import Login from './pages/login.jsx';
@@ -7,7 +7,7 @@ import NotFound from './components/NotFound.jsx';
 import State from './context/state.js';
 import Home from "./pages/Home.jsx";
 import Profile from "./pages/Profile.jsx";
-import { useJwt } from "react-jwt"
+// import { useJwt } from "react-jwt"
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import ForgetPass from './pages/ForgetPass';
@@ -19,51 +19,54 @@ import Deposit from './pages/Deposit.jsx';
 import Account from './pages/Account.jsx';
 import History from './pages/History.jsx'; 
 import Refferals from './pages/Refferals.jsx';
-
+ 
 const App = () => {
   const [loggedin, setLoggedin] = useState(false);
-  const { decodedToken, isExpired } = useJwt(localStorage.getItem('login-Dollar-tree-token'));
-
+  
+  // Safe token retrieval with null check
+  const token = localStorage.getItem('login-Dollar-tree-token');
+ 
   useEffect(() => {
-    const token = localStorage.getItem('login-Dollar-tree-token');
-    if (token && decodedToken && !isExpired) {
+    console.log("Token check:", token);
+    // Simple check - if token exists, consider user logged in
+    if (token) {
+      console.log("Token exists, user logged in");
       setLoggedin(true);
     } else {
+      console.log("No token, user not logged in");
       setLoggedin(false);
-      localStorage.removeItem('login-Dollar-tree-token');
     }
-  }, [decodedToken, isExpired]);
+  }, [token]);
 
   return (
     <div className="appbody">
       <State>
         <Router>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/login" element={!loggedin ? <Login /> : <Navigate to="/" />} />
-            <Route path="/forgetpass" element={!loggedin ? <ForgetPass /> : <Navigate to="/" />} />
-            <Route path="/resetpass" element={!loggedin ? <Resetpass /> : <Navigate to="/" />} />
-            
-            {/* Protected routes */}
-            <Route path="/" element={loggedin ? (
-              <>
-                <Navbar />
-                <Home />
-                <Footer />
-              </>
-            ) : <Navigate to="/login" />} />
-            
-            <Route path="/profile" element={loggedin ? (
-              <>
-                <Navbar />
-                <Profile />
-                <Footer />
-              </>
-            ) : <Navigate to="/login" />} />
-            
-            {/* Add other protected routes similarly */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          {!loggedin ? (
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/forgetpass" element={<ForgetPass />} />
+              <Route path="/resetpass" element={<Resetpass />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          ) : (
+            <>
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/resetpass" element={<Resetpass />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/policy" element={<Policy />} />
+                <Route path="/record" element={<History />} />
+                <Route path="/deposit" element={<Deposit />} />
+                <Route path="/account" element={<Account />} />
+                <Route path="/refferals" element={<Refferals />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Footer/>
+            </>
+          )}
 
           <ToastContainer />
         </Router>
