@@ -3,7 +3,8 @@
 }
 .maincolor{
     color:#28a745;
-}
+} 
+
 .btnText{
     color: white;
     font-weight: 700;
@@ -16,3 +17,27 @@
 .analyticsbox{
     max-width: 17rem;
 }
+
+.btn-join-plan {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+            color: white !important;
+          }
+          
+          .btn-join-plan:hover {
+            background-color: #218838 !important;
+            border-color: #1e7e34 !important;
+          }
+          
+          /* If the PlanContainer uses a different class */
+          .plan-join-button {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+            color: white !important;
+          }
+          
+          .btn-plan-join {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+            color: white !important;
+          }

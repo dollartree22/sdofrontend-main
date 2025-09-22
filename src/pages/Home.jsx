@@ -24,7 +24,7 @@ const Home = () => {
 
   useEffect(() => {
     getallplans();
-  }, [getallplans]); // Added getallplans to dependency array
+  }, [getallplans]);
 
   const handleFormSubmit = () => {
     if (!formData.amount || formData.amount < 10) {
@@ -111,7 +111,6 @@ const Home = () => {
   function copyToClipboard(text) {
     if (!text) return;
     
-    // Create a temporary input element to copy the text
     const tempInput = document.createElement('input');
     tempInput.value = text;
     document.body.appendChild(tempInput);
@@ -206,7 +205,6 @@ const Home = () => {
             <MiningButton currentminingtime={me.miningstartdata} />
           </div>
 
-          {/* Uncommented the plan section - this seems important */}
           {me.membership?.plan ? (
             <MyPlan 
               handleShowModal={handleShowModal} 
@@ -256,7 +254,7 @@ const Home = () => {
               <Button variant="secondary" onClick={handleModalClose}>
                 Close
               </Button>
-              <Button variant="primary" onClick={handleFormSubmit}>
+              <Button variant="secondary" onClick={handleFormSubmit}>
                 Submit
               </Button>
             </Modal.Footer>
@@ -267,6 +265,7 @@ const Home = () => {
             <Modal.Header closeButton>
               <Modal.Title>{update ? 'Update Plan' : 'Join Plan'}</Modal.Title>
             </Modal.Header>
+
             <Modal.Body>
               <Form>
                 <Form.Group controlId="formPlanAmount">
@@ -285,7 +284,8 @@ const Home = () => {
               <Button variant="secondary" onClick={handleModal2Close}>
                 Close
               </Button>
-              <Button variant="primary" onClick={handleForm2Submit}>
+              {/* Changed this button to green */}
+              <Button variant="success" onClick={handleForm2Submit}>
                 {update ? 'Update Plan' : 'Join Plan'}
               </Button>
             </Modal.Footer>
@@ -308,6 +308,7 @@ const Home = () => {
           </Modal>
         </>
       )}
+      
     </div>
   );
 }
