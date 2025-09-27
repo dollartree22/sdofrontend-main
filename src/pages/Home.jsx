@@ -260,6 +260,12 @@ const Home = () => {
             </Modal.Footer>
           </Modal>
 
+
+
+
+
+
+
           {/* Join Plan Modal */}
           <Modal show={showModal2} backdrop="static" onHide={handleModal2Close}>
             <Modal.Header closeButton>

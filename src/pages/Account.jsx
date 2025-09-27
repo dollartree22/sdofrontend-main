@@ -23,12 +23,15 @@ const Account = () => {
 
     // ✅ Update form fields when me data changes
     useEffect(() => {
-        if (me) {
-            setemail(me.email || "");
-            setwallet_address(me.wallet_address || "");
-            setname(me.name || "");
+    if (me) {
+        setemail(me.email || "");
+        setname(me.name || "");
+        if (me.wallet_address) {
+            setwallet_address(me.wallet_address);
         }
-    }, [me])
+    }
+}, [me]);
+
 
     const handlechangepass = async () => {
         if (cpassword !== newpassword) {
