@@ -356,249 +356,124 @@ const State = (props) => {
       console.log(error)
     }
   }
-
-
-  // const sendregotp = async (data) => {
-  //   const response = await fetch(`${host}/api/user/sendregotp`, {
-  //     method: "post",
-  //     headers: {
-  //       "Access-Control-Allow-Origin": "*",
-  //       "Access-Control-Allow-Methods": "GET",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data)
-  //   })
-  //   const json = await response.json();
-  //   if (json.success) {
-  //     localStorage.setItem("otp-login-token", json.token)
-  //     toast.success("OTP SENT!", {
-  //       position: "top-center",
-  //       autoClose: 3000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "light",
-  //     });
-  //     return true
-  //   } else {
-  //     toast.error(json.message, {
-  //       position: "top-center",
-  //       autoClose: 3000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "dark",
-  //     });
-  //     return false
-  //   }
-  // }
-  // const sendotp = async (data) => {
-  //   const response = await fetch(`${host}/api/user/sendotp`, {
-  //     method: "post",
-  //     headers: {
-  //       "Access-Control-Allow-Origin": "*",
-  //       "Access-Control-Allow-Methods": "GET",
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify(data)
-  //   })
-  //   const json = await response.json();
-  //   if (json.success) {
-  //     localStorage.setItem("otp-login-token", json.token)
-  //     toast.success("OTP SENT!", {
-  //       position: "top-center",
-  //       autoClose: 3000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "light",
-  //     });
-  //     return true
-  //   } else {
-  //     toast.error(json.message, {
-  //       position: "top-center",
-  //       autoClose: 3000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "dark",
-  //     });
-  //     return false
-  //   }
-  // }
-  // const verifyotp = async (data) => {
-  //   const response = await fetch(`${host}/api/user/verifyotp`, {
-  //     method: "post",
-  //     headers: {
-  //       "Access-Control-Allow-Origin": "*",
-  //       "Access-Control-Allow-Methods": "GET",
-  //       "Content-Type": "application/json",
-  //       "Authorization": localStorage.getItem('otp-login-token')
-  //     },
-  //     body: JSON.stringify(data)
-  //   })
-  //   const json = await response.json();
-  //   if (json.success) {
-  //     localStorage.setItem("otp-login-token", json.token)
-  //     window.location = "/resetpass"
-  //   } else {
-  //     toast.error(json.message, {
-  //       position: "top-center",
-  //       autoClose: 3000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "dark",
-  //     });
-  //   }
-  // }
-
-
-  // const getallplans = async (data) => {
-  //   const response = await fetch(`${host}/api/plan/`, {
-  //     method: "get",
-  //     headers: {
-  //       "Access-Control-Allow-Origin": "*",
-  //       "Access-Control-Allow-Methods": "GET",
-  //       "Content-Type": "application/json",
-  //       "Authorization": localStorage.getItem('login-Dollar-tree-token')
-  //     },
-  //     body: JSON.stringify(data)
-  //   })
-  //   const json = await response.json();
-  //   if (json.success) {
-  //     setplans(json.data)
-  //   } else {
-  //     toast.error(json.message, {
-  //       position: "top-center",
-  //       autoClose: 3000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "dark",
-  //     });
-  //   }
-  // }
-
-   const getallplans = async () => { // Removed data parameter for GET request
-    try {
-      const response = await fetch(`${host}/api/plan/`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": localStorage.getItem('login-Dollar-tree-token')
-        }
-        // Removed body from GET request
-      })
-      const json = await response.json();
-      if (json.success) {
-        setplans(json.data)
-      } else {
-        toast.error(json.message, {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      }
-    } catch (error) {
-      toast.error("Network error. Please try again.", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  }
-
-
-  const joinplan = async (data) => {
-    setloading(true)
+// FIXED joinplan function
+const joinplan = async (data) => {
+  setloading(true);
+  try {
     const response = await fetch(`${host}/api/plan/`, {
-      method: "post",
+      method: "POST", // Uppercase
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
         "Content-Type": "application/json",
         "Authorization": localStorage.getItem('login-Dollar-tree-token')
       },
       body: JSON.stringify(data)
-    })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     const json = await response.json();
-    setloading(false)
+    setloading(false);
+    
     if (json.success) {
       toast.success("Plan Joined Successfully!", {
         position: "top-center"
-      })
-      return true
-    } else {
-      toast.error(json.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
       });
-      return false
+      await getme(); // Refresh user data
+      return true;
+    } else {
+      toast.error(json.message || "Failed to join plan", {
+        position: "top-center"
+      });
+      return false;
     }
+  } catch (error) {
+    setloading(false);
+    toast.error("Network error. Please try again.", {
+      position: "top-center"
+    });
+    console.error("Join plan error:", error);
+    return false;
   }
+}
 
-  const updateplan = async (data) => {
-    setloading(true)
+// FIXED updateplan function
+const updateplan = async (data) => {
+  setloading(true);
+  try {
     const response = await fetch(`${host}/api/plan/`, {
-      method: "put",
+      method: "PUT", // Uppercase - CRITICAL FIX
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
         "Content-Type": "application/json",
         "Authorization": localStorage.getItem('login-Dollar-tree-token')
+        // Remove redundant CORS headers
       },
       body: JSON.stringify(data)
-    })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     const json = await response.json();
-    setloading(false)
+    setloading(false);
+    
     if (json.success) {
       toast.success("Plan Updated Successfully!", {
         position: "top-center"
-      })
-      return true
-    } else {
-      toast.error(json.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
       });
-      return false
+      await getme(); // Refresh user data
+      return true;
+    } else {
+      toast.error(json.message || "Failed to update plan", {
+        position: "top-center"
+      });
+      return false;
     }
+  } catch (error) {
+    setloading(false);
+    toast.error("Network error. Please try again.", {
+      position: "top-center"
+    });
+    console.error("Update plan error:", error);
+    return false;
   }
+}
+
+// FIXED getallplans function
+const getallplans = async () => { 
+  try {
+    const response = await fetch(`${host}/api/plan/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem('login-Dollar-tree-token')
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const json = await response.json();
+    
+    if (json.success) {
+      setplans(json.data || []); // Ensure array
+    } else {
+      toast.error(json.message || "Failed to load plans", {
+        position: "top-center"
+      });
+    }
+  } catch (error) {
+    toast.error("Network error. Please try again.", {
+      position: "top-center"
+    });
+    console.error("Get plans error:", error);
+  }
+}
+
+
   const Withdraw = async (data) => {
     const response = await fetch(`${host}/api/transaction/withdraw`, {
       method: "post",

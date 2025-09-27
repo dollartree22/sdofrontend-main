@@ -26,7 +26,6 @@ yarn-error.log*
 .vercel
 .env 
 
- 
 
 /*.rar
 .vercel

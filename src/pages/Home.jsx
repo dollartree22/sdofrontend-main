@@ -51,6 +51,7 @@ const Home = () => {
     password: ""
   });
 
+
   const handleModalClose = () => {
     setFormData({
       amount: 0,
@@ -70,38 +71,57 @@ const Home = () => {
     setupdate(false);
   }
   
-  const handleForm2Submit = async () => {
-    if (!amount || amount < 50) {
-      toast.error('Minimum amount is $50');
-      return;
-    }
-    
-    const totalBalance = (me.balance || 0) + (me.locked_amount || 0);
-    if (totalBalance < amount) {
-      toast.error('Insufficient balance');
-      return;
-    }
-    
+  // FIXED handleForm2Submit function
+const handleForm2Submit = async () => {
+  if (!amount || amount < 50) {
+    toast.error('Minimum amount is $50');
+    return;
+  }
+  
+  const totalBalance = (me.balance || 0) + (me.locked_amount || 0);
+  if (totalBalance < amount) {
+    toast.error('Insufficient balance');
+    return;
+  }
+  
+  try {
     let response;
     if (update) {
       response = await updateplan({ amount, id });
     } else {
       response = await joinplan({ amount, id });
     }
+    
     if (response) {
-      window.location.reload();
+      // Don't reload page, just close modal and refresh data
+      handleModal2Close();
+      await a.getme(); // Refresh user data
     }
-  };
+  } catch (error) {
+    console.error("Plan action error:", error);
+  }
+};
 
-  // Modal 3
+// Modal 3
   const [showModal3, setshowModal3] = useState(false);
   
-  const handleShowModal = () => {
-    setshowModal3(true);
-    const currentPlanDuration = me.membership?.plan?.duration || 0;
-    setupdateableplan(plans.filter((plan) => plan.duration > currentPlanDuration));
-    setupdate(true);
-  }
+  
+// FIXED handleShowModal function
+const handleShowModal = () => {
+  setshowModal3(true);
+  const currentPlanDuration = me.membership?.plan?.duration || 0;
+  
+  // Ensure plans is an array before filtering
+  const availablePlans = Array.isArray(plans) 
+    ? plans.filter((plan) => plan.duration > currentPlanDuration)
+    : [];
+  
+  setupdateableplan(availablePlans);
+  setupdate(true);
+}
+
+  
+  
   
   const handleCloseModal = () => {
     setshowModal3(false);
